@@ -7,12 +7,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3 # Ensure you're using the latest version
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v3 # Ensure compatibility with Node.js 20
         with:
-          node-version: 18
+          node-version: 20 # Use Node.js 20 explicitly to match GitHub's latest runtime
           registry-url: https://registry.npmjs.org
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests
+        run: npm test
       - name: Publish to NPM
         run: npm publish --access public
         env:
