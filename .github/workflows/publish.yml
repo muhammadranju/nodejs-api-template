@@ -5,19 +5,31 @@ on: push
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    environment: Release
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3 # Ensure you're using the latest version
-      - name: Set up Node.js
-        uses: actions/setup-node@v3 # Ensure compatibility with Node.js 20
+      - name: Checkout
+        uses: actions/checkout@v4 # Ensure you're using the latest version
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4.0.0
+
+      - name: Set node version to 20
+        uses: actions/setup-node@v4
         with:
-          node-version: 20 # Use Node.js 20 explicitly to match GitHub's latest runtime
-          registry-url: https://registry.npmjs.org
-      - name: Install dependencies
-        run: npm install
-      - name: Run tests
-        run: npm test
-      - name: Publish to NPM
-        run: npm publish --access public
+          node-version: 20
+          registry-url: https://registry.npmjs.org/
+          cache: "pnpm"
+
+      - name: Install deps
+        run: pnpm install
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+
+      - name: Publish package
+        run: pnpm run ci-publish ${{ github.ref_name }}
+
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODEJS_API_TEMPLATE }}

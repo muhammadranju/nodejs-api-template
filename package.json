@@ -1,6 +1,6 @@
 {
-  "name": "portfolio-projects-api",
-  "version": "1.0.0",
+  "name": "nodejs-api-template",
+  "version": "1.0.4",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
